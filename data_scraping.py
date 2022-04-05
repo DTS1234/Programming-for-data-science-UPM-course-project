@@ -18,7 +18,7 @@ urls_dict = {
 
 
 def scrape_data():
-    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    browser = webdriver.Chrome("chromedriver.exe")
     browser.maximize_window()
     browser.get('https://www.investing.com')
 
