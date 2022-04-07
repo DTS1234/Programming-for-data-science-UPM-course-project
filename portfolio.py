@@ -7,7 +7,7 @@ class Portfolio:
     def __init__(self, asset_types: list, allocation: list) -> None:
         super().__init__()
         self.portfolio = None
-        self.type = asset_types
+        self.asset_types = asset_types
         self.check_data(allocation, asset_types)
         self.allocation = allocation
 
@@ -29,7 +29,7 @@ class Portfolio:
             amount = money * allocation_value
             amounts.append(amount)
 
-        for asset in self.type:
+        for asset in self.asset_types:
             price = self.read_current_asset_price(asset)
             prices.append(price)
             buying_price = self.read_buying_asset_price(asset)
@@ -40,11 +40,13 @@ class Portfolio:
             shares.append(round(share, 2))
 
         data = {
-            'asset': self.type, 'allocation': self.allocation, 'amount': amounts, 'current price': prices,
+            'asset': self.asset_types, 'allocation': self.allocation, 'amount': amounts, 'current price': prices,
             'buying price': buying_prices, 'shares': shares
         }
 
         self.portfolio = pd.DataFrame(data)
+        self.portfolio['buy amount'] = self.portfolio['shares'] * self.portfolio['buying price']
+        self.portfolio['current value'] = self.portfolio['shares'] * self.portfolio['current price']
 
         return self.portfolio
 
@@ -59,7 +61,7 @@ class Portfolio:
 
         return final_price
 
-    def read_buying_asset_price(self, asset_type):
+    def read_buying_asset_price(self, asset_type) -> pd.Series:
         data_frame = self.get_data_frame_by_asset(asset_type)
 
         price_df = data_frame[data_frame['Date'] == 'Jan 01, 2020']['Price']
@@ -70,7 +72,8 @@ class Portfolio:
 
         return final_price
 
-    def get_data_frame_by_asset(self, asset_type):
+    @staticmethod
+    def get_data_frame_by_asset(asset_type) -> pd.DataFrame:
         if asset_type == 'GO':
             data_frame = pd.read_csv('pricedata_Gold.csv')
         elif asset_type == 'ST':
@@ -83,10 +86,14 @@ class Portfolio:
             data_frame = pd.read_csv('pricedata_Corporate_bonds.csv')
         else:
             raise Exception('No such asset !')
+
         return data_frame
 
     def __getitem__(self, item):
-        return self.portfolio[item];
+        return self.portfolio[item]
+
+    def __getattribute__(self, name: str) -> Any:
+        return super().__getattribute__(name)
 
 
 p = Portfolio(["ST", "CB", "PB", "GO", "CA"], [0.1, 0.2, 0.4, 0.2, 0.1])

@@ -53,8 +53,7 @@ def scrape_data():
 
             WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#curr_table')))
 
-            priced_df = pd.read_html(browser.find_element(By.CSS_SELECTOR, "#curr_table").get_attribute('outerHTML'))[
-                0]  # scrape the price data
+            priced_df = pd.read_html(browser.find_element(By.CSS_SELECTOR, "#curr_table").get_attribute('outerHTML'))[0]  # scrape the price data
             csv_name = r'pricedata_{}.csv'.format(asset)  # name the csv file based on the asset
             priced_df.to_csv(csv_name)  # save csv file
 
