@@ -1,4 +1,4 @@
-from portfolio import Portfolio
+from Portfolio.portfolio import Portfolio
 import pandas as pd
 import itertools
 import numpy as np

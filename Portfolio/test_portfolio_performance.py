@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from portfolio_performance import Performance
+from Portfolio.portfolio_performance import Performance
 
 
 class TestPerformance(TestCase):
