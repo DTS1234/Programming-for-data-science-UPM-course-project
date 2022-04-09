@@ -9,11 +9,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 urls_dict = {
-    'https://www.investing.com/funds/amundi-msci-wrld-ae-c': 'Stocks',
-    'https://www.investing.com/etfs/ishares-global-corporate-bond-$': 'Corporate_bonds',
-    'https://www.investing.com/etfs/db-x-trackers-ii-global-sovereign-5': 'Public_bonds',
-    'https://www.investing.com/etfs/spdr-gold-trust': 'Gold',
-    'https://www.investing.com/indices/usdollar': 'Cash'
+    'https://www.investing.com/funds/amundi-msci-wrld-ae-c': 'amundi-msci-wrld-ae-c',
+    'https://www.investing.com/etfs/ishares-global-corporate-bond-$': 'ishares-global-corporate-bond-$',
+    'https://www.investing.com/etfs/db-x-trackers-ii-global-sovereign-5': 'db-x-trackers-ii-global-sovereign-5',
+    'https://www.investing.com/etfs/spdr-gold-trust': 'spdr-gold-trust',
+    'https://www.investing.com/indices/usdollar': 'usdollar'
 }
 
 
@@ -54,7 +54,7 @@ def scrape_data():
             WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#curr_table')))
 
             priced_df = pd.read_html(browser.find_element(By.CSS_SELECTOR, "#curr_table").get_attribute('outerHTML'))[0]  # scrape the price data
-            csv_name = r'pricedata_{}.csv'.format(asset)  # name the csv file based on the asset
+            csv_name = r'{}.csv'.format(asset)  # name the csv file based on the asset
             priced_df.to_csv(csv_name)  # save csv file
 
             dfs.append(priced_df)
