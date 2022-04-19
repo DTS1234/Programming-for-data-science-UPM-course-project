@@ -54,6 +54,12 @@ class Performance:
             df.loc[index, 'VOLAT'] = self.calculate_volatility(self.get_values_for_asset(x))
 
     def initialize_data_frame(self):
+        df = self.generate_allocations()
+        df["RETURN"] = None
+        df['VOLAT'] = None
+        return df
+
+    def generate_allocations(self):
         weights = []
         weight_range = range(0, 105, 20)
         for step in weight_range:
@@ -63,13 +69,14 @@ class Performance:
         for i in combinations:
             if sum(i) == 100:
                 good_allocations.append(i)
+
         df = pd.DataFrame(good_allocations, columns=['ST', 'CB', 'PB', 'GO', 'CA'])
-        df["RETURN"] = None
-        df['VOLAT'] = None
+        df.to_csv('portfolio_allocations.csv')
+
         return df
 
-    def can_add(i, new_list):
-        return np.logical_and(new_list[i] > 0, new_list[i] < 100)
+    def can_add(self, new_list):
+        return np.logical_and(new_list[self] > 0, new_list[self] < 100)
 
 
 performance = Performance()

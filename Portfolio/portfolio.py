@@ -75,15 +75,15 @@ class Portfolio:
     @staticmethod
     def get_data_frame_by_asset(asset_type) -> pd.DataFrame:
         if asset_type == 'GO':
-            data_frame = pd.read_csv('spdr-gold-trust.csv')
+            data_frame = pd.read_csv('Scraping/spdr-gold-trust.csv')
         elif asset_type == 'ST':
-            data_frame = pd.read_csv('amundi-msci-wrld-ae-c.csv')
+            data_frame = pd.read_csv('Scraping/amundi-msci-wrld-ae-c.csv')
         elif asset_type == 'PB':
-            data_frame = pd.read_csv('db-x-trackers-ii-global-sovereign-5.csv')
+            data_frame = pd.read_csv('Scraping/db-x-trackers-ii-global-sovereign-5.csv')
         elif asset_type == 'CA':
-            data_frame = pd.read_csv('usdollar.csv')
+            data_frame = pd.read_csv('Scraping/usdollar.csv')
         elif asset_type == 'CB':
-            data_frame = pd.read_csv('ishares-global-corporate-bond-$.csv')
+            data_frame = pd.read_csv('Scraping/ishares-global-corporate-bond-$.csv')
         else:
             raise Exception('No such asset !')
 
@@ -95,7 +95,3 @@ class Portfolio:
     def __getattribute__(self, name: str) -> Any:
         return super().__getattribute__(name)
 
-
-p = Portfolio(["ST", "CB", "PB", "GO", "CA"], [0.1, 0.2, 0.4, 0.2, 0.1])
-portfolio = p.construct_portfolio(100000)
-print(portfolio)
