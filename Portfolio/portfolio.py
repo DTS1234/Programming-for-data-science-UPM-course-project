@@ -75,15 +75,15 @@ class Portfolio:
     @staticmethod
     def get_data_frame_by_asset(asset_type) -> pd.DataFrame:
         if asset_type == 'GO':
-            data_frame = pd.read_csv('Scraping/spdr-gold-trust.csv')
+            data_frame = pd.read_csv('../Scraping/spdr-gold-trust.csv')
         elif asset_type == 'ST':
-            data_frame = pd.read_csv('Scraping/amundi-msci-wrld-ae-c.csv')
+            data_frame = pd.read_csv('../Scraping/amundi-msci-wrld-ae-c.csv')
         elif asset_type == 'PB':
-            data_frame = pd.read_csv('Scraping/db-x-trackers-ii-global-sovereign-5.csv')
+            data_frame = pd.read_csv('../Scraping/db-x-trackers-ii-global-sovereign-5.csv')
         elif asset_type == 'CA':
-            data_frame = pd.read_csv('Scraping/usdollar.csv')
+            data_frame = pd.read_csv('../Scraping/usdollar.csv')
         elif asset_type == 'CB':
-            data_frame = pd.read_csv('Scraping/ishares-global-corporate-bond-$.csv')
+            data_frame = pd.read_csv('../Scraping/ishares-global-corporate-bond-$.csv')
         else:
             raise Exception('No such asset !')
 
