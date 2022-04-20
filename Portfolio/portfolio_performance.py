@@ -1,7 +1,8 @@
-from Portfolio.portfolio import Portfolio
-import pandas as pd
 import itertools
-import numpy as np
+
+import pandas as pd
+
+from Portfolio.portfolio import Portfolio
 
 
 class Performance:
@@ -15,28 +16,6 @@ class Performance:
         portfolio_return = (sum_current - sum_buying) / sum_buying * 100
         return round(portfolio_return, 2)
 
-    def get_values_for_asset(self, port: Portfolio):
-        port_type = ['ST', 'CB', 'PB', 'GO', 'CA']
-        values = []
-
-        for asset_type in port_type:
-            df_asset = port.get_data_frame_by_asset(asset_type)
-            value = df_asset['Price'] * (port[port['asset'] == asset_type]['shares'].iloc[0])
-            values.append(pd.Series.sum(value))
-
-        return values
-
-    def calculate_volatility(self, asset_values: list):
-        values_series = pd.Series(asset_values)
-        std = pd.Series.std(values_series)
-        average = pd.Series.mean(values_series)
-        return round(std / average * 100, 2)
-
-    def construct_metric(self, port: Portfolio):
-        index = pd.concat([pd.Series(port.asset_types), pd.Series(["RETURN", "VOLAT"])])
-        df = pd.DataFrame(index=index)
-        print(df)
-
     def generate_portfolios(self):
 
         df = self.initialize_data_frame()
@@ -47,11 +26,33 @@ class Performance:
     def fill_return_and_volatility(self, df):
         for index, row in df.iterrows():
             row = row / 100
-            x = Portfolio(['ST', 'CB', 'PB', 'GO', 'CA'], row['ST':'CA'].copy().tolist())
-            x.construct_portfolio(100000)
+            portfolio_x = Portfolio(['ST', 'CB', 'PB', 'GO', 'CA'], row['ST':'CA'].copy().tolist())
+            portfolio_x.construct_portfolio(1000)
 
-            df.loc[index, 'RETURN'] = self.calculate_return(x)
-            df.loc[index, 'VOLAT'] = self.calculate_volatility(self.get_values_for_asset(x))
+            df.loc[index, 'RETURN'] = self.calculate_return(portfolio_x)
+            volatility_portfolio = self.calculate_volatilty(portfolio_x)
+
+            df.loc[index, 'VOLAT'] = volatility_portfolio
+
+    def calculate_volatilty(self, portfolio_x):
+        volatilities = []
+
+        for asset in portfolio_x.asset_types:
+            prices = portfolio_x.get_data_frame_by_asset(asset)['Price']
+            prices_std = pd.Series.std(prices)
+            average = pd.Series.mean(prices)
+            volatility = prices_std / average * 100
+            volatilities.append(volatility)
+
+        final_volat = []
+
+        for i in range(len(portfolio_x.allocation)):
+            asset_allocation = portfolio_x.allocation[i]
+            final_volat.append(asset_allocation * volatilities[i])
+
+        volatility_portfolio = round(sum(final_volat), 2)
+
+        return volatility_portfolio
 
     def initialize_data_frame(self):
         df = self.generate_allocations()
@@ -74,9 +75,6 @@ class Performance:
         df.to_csv('portfolio_allocations.csv')
 
         return df
-
-    def can_add(self, new_list):
-        return np.logical_and(new_list[self] > 0, new_list[self] < 100)
 
 
 performance = Performance()

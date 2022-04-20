@@ -36,7 +36,7 @@ class Portfolio:
             buying_prices.append(buying_price)
 
         for i in range(len(self.allocation)):
-            share = amounts[i] / prices[i]
+            share = amounts[i] / buying_prices[i]
             shares.append(round(share, 2))
 
         data = {
@@ -94,4 +94,3 @@ class Portfolio:
 
     def __getattribute__(self, name: str) -> Any:
         return super().__getattribute__(name)
-
