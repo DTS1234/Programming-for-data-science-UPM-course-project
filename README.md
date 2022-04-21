@@ -2,7 +2,7 @@
 
 This project is the implementation of the final project for UPM Programming for Data Science course.
 
-Project contains three directories:
+The project contains three directories:
         
 <ul>
     <li><b>Analysis</b> - this part covers data analysis part and it contains only Portfolio_data_analysis.ipynb notebook file</li>
@@ -10,9 +10,11 @@ Project contains three directories:
     <li><b>Scraping</b> - this directory contains data_scraping.py file with the scrip for the first part of the assigment as well as chromedriver.exe required to run selenium code. More than that after executing data_scraping.py there should appear csv files with the data scraped.</li>
 </ul>
 
-In order to run the  code it's needed to run the python files: data_scraping.py for scraping part,
-portfolio_performance.py for data generation part and open the Portfolio_data_analysis.ipynb 
-notebook file and run it in jupyter.
+In order to run the code it's needed to run the following python files: 
+1. data_scraping.py to scrape the data
+2. portfolio_performance.py for the data generation part 
+
+Finally, to view the data analysis notebook, run the Portfolio_data_analysis.ipynb file in jupyter notebook.
 
 The following anaconda environment with python 3.10 version, and the following packages installed is required:
 
