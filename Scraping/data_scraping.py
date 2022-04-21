@@ -2,11 +2,9 @@ import pandas as pd
 from selenium import webdriver
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 
 urls_dict = {
     'https://www.investing.com/funds/amundi-msci-wrld-ae-c': 'amundi-msci-wrld-ae-c',
@@ -53,7 +51,8 @@ def scrape_data():
 
             WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#curr_table')))
 
-            priced_df = pd.read_html(browser.find_element(By.CSS_SELECTOR, "#curr_table").get_attribute('outerHTML'))[0]  # scrape the price data
+            priced_df = pd.read_html(browser.find_element(By.CSS_SELECTOR, "#curr_table").get_attribute('outerHTML'))[
+                0]  # scrape the price data
             csv_name = r'{}.csv'.format(asset)  # name the csv file based on the asset
             priced_df.to_csv(csv_name)  # save csv file
 
@@ -66,6 +65,31 @@ def scrape_data():
     return dfs
 
 
+def fill_empty_dates(csv_files):
+    print(csv_files)
+    # creating the whole year data range
+    date_range = pd.date_range('2020-01-01', periods=366, freq='D')
+    # paste to series and revert
+    dates = pd.Series(date_range.tolist()).iloc[::-1]
+    # create a data frane
+    frame = {'Dates': dates}
+    df = pd.DataFrame(frame)
+    # create a format matching csv scraped data
+    df['DatesNotFormatted'] = pd.to_datetime(df.Dates)
+    df['Date'] = df['DatesNotFormatted'].dt.strftime("%b %d, %Y")
+    # for each file
+    for file in csv_files:
+        # merge by dates formatted
+        new_df = pd.merge(df, pd.read_csv(file+'.csv'), on='Date', how='outer')
+        # fill with last valid value
+        new_df.fillna(method='bfill', inplace=True)
+        new_df.ffill(inplace=True)
+        # overwrite
+        new_df[['Date', 'Price', 'Open', 'High', 'Low', 'Change %']].to_csv(file+'.csv')
+
 dfs = scrape_data()  # call the function
 for df in dfs:
     df.describe()
+
+fill_empty_dates(urls_dict.values())
+
