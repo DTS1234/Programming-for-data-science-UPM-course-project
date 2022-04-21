@@ -83,11 +83,12 @@ def fill_empty_dates(csv_files):
         new_df = pd.merge(df, pd.read_csv(file+'.csv'), on='Date', how='outer')
         # fill with last valid value
         new_df.fillna(method='bfill', inplace=True)
+        # fill the first day of the year if not present with the second one
         new_df.ffill(inplace=True)
         # overwrite
         new_df[['Date', 'Price', 'Open', 'High', 'Low', 'Change %']].to_csv(file+'.csv')
 
-dfs = scrape_data()  # call the function
+dfs = scrape_data()
 for df in dfs:
     df.describe()
 
