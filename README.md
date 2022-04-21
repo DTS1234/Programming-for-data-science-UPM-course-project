@@ -14,7 +14,7 @@ In order to run the  code it's needed to run the python files: data_scraping.py 
 portfolio_performance.py for data generation part and open the Portfolio_data_analysis.ipynb 
 notebook file and run it in jupyter.
 
-The following anaconda environment with python 3.10 version, and the following packages installed are required:
+The following anaconda environment with python 3.10 version, and the following packages installed is required:
 
 Package              Version
 -------------------- ---------
